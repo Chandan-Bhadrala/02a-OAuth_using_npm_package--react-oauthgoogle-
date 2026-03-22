@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema(
 // We've called a mongoose.model function with two arguments.
 // One is the name of the collection "users" and other is the schema that goes into that collection.
 // And we receive back a model, which we store in the User variable.
-const User = mongoose.model("users", UserSchema);
+export const User = mongoose.model("users", UserSchema);
 
 /**
 A version for the NextJS.
