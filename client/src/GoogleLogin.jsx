@@ -1,6 +1,10 @@
 import { useGoogleLogin } from "@react-oauth/google";
+import { googleAuth } from "./api";
+import {useNavigate} from "react-router-dom"
+
 
 const GoogleLogin = () => {
+  const navigate = useNavigate();
   // 4. Creating responseGoogle function
   const responseGoogle = async (authResult) => {
     // Above authResult is populated by the useGoogleLogin hook.
@@ -10,6 +14,19 @@ const GoogleLogin = () => {
         // A one time code is shared by the google as an object captured in the authResult variable.
         // Send this code to the BE via. an api call for the verification of the code via our BE and the Google handshake.
         // If the code verification is successful, store/update the user in the DB and send user at the FE a login-session-token.
+        const result = await googleAuth(authResult["code"]);
+
+        // Extracting the data shared back by the BE on its successful handshake w/ the google.
+        const { email, name, image } = result.data.user;
+        // console.log(result.data.user);
+
+        const { token } = result.data;
+        // console.log(token)
+
+        // Consolidating the received user data for storage in the FE cookies.
+        const obj = { email, name, image, token };
+        localStorage.setItem("user-info", JSON.stringify(obj));
+        if(obj) navigate("/dashboard")
       }
     } catch (error) {
       console.error("Error while requesting google code: ", error);

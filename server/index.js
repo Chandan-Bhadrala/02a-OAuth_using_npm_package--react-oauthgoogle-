@@ -2,12 +2,21 @@ import express from "express";
 import dotenv from "dotenv";
 import authRouter from "./routes/authRouter.js";
 import connectDB from "./db/dbConnect.js";
+import cors from "cors";
 
 // Load environment variables from .env file
 dotenv.config({ path: "./.env" });
 const PORT = process.env.PORT;
 
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "DELETE", "PUT"], // allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // allowed headers
+  }),
+);
 
 app.use("/auth", authRouter);
 
